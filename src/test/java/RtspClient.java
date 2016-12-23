@@ -24,9 +24,9 @@ public class RtspClient {
     private static String rtspBaseUrl = "rtsp://192.168.4.200:554/sample_h264_100kbit.mp4";
 
     public static void main(String[] args) {
+        Bootstrap bootstrap = new Bootstrap();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-            Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(workerGroup)
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.SO_KEEPALIVE, true)
@@ -94,7 +94,7 @@ class RtspClientHandler extends ChannelInboundHandlerAdapter implements VideoCon
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         FullHttpMessage message  = (FullHttpMessage)msg;
-        DecoderResult decoderResult = message.getDecoderResult();
+        DecoderResult decoderResult = message.decoderResult();
 //        if (decoderResult.isSuccess()) {
 //            readSuccessFuulHttpMessage(message);
 //        }
@@ -121,11 +121,11 @@ class RtspClientHandler extends ChannelInboundHandlerAdapter implements VideoCon
                 }
                 case SETUP: {
                     System.out.println("---------------------------------------- SETUP -----------------------------------------");
-                    for (Map.Entry<String, String> entry: message.headers().entries()) {
+                    message.headers().entries().forEach(entry -> {
                         if (SESSION_KEY.equals(entry.getKey())) {
                             sessionId = entry.getValue();
                         }
-                    }
+                    });
                     readSuccessFuulHttpMessage(message);
                     doPlay();
                     currentState = State.PLAY;
@@ -134,7 +134,7 @@ class RtspClientHandler extends ChannelInboundHandlerAdapter implements VideoCon
                 case PLAY: {
                     System.out.println("---------------------------------------- PLAY -----------------------------------------");
                     readSuccessFuulHttpMessage(message);
-                    doPause();
+//                    doPause();
                     currentState = State.PAUSE;
                     break;
                 }
@@ -194,9 +194,9 @@ class RtspClientHandler extends ChannelInboundHandlerAdapter implements VideoCon
         DefaultFullHttpRequest msg = new DefaultFullHttpRequest(RtspVersions.RTSP_1_0, RtspMethods.SETUP, rtspBaseUrl);
         HttpHeaders headers = msg.headers();
         headers.add("CSeq", seqNo++);
-//        headers.add("Transport", "RTP/AVP;UNICAST;client_port=16264-16265;mode=play");
+        headers.add("Transport", "RTP/AVP/UDP;UNICAST;client_port=5566-16265;mode=play");
         //告诉服务端采用tcp发送协议
-        headers.add("Transport", "RTP/AVP/TCP;interleaved=0-1");
+//        headers.add("Transport", "RTP/AVP/TCP;interleaved=0-1");
         channel.writeAndFlush(msg);
     }
 
@@ -206,7 +206,7 @@ class RtspClientHandler extends ChannelInboundHandlerAdapter implements VideoCon
         HttpHeaders headers = msg.headers();
         headers.add("CSeq", seqNo++);
         headers.add("Session", sessionId);
-        headers.add("Transport", "RTP/AVP;UNICAST;client_port=16264-16265;mode=play");
+//        headers.add("Transport", "RTP/AVP;UNICAST;client_port=16264-16265;mode=play");
         channel.writeAndFlush(msg);
     }
 
