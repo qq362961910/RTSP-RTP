@@ -7,6 +7,12 @@
     <groupId>study</groupId>
     <artifactId>rtsp-rtp</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>rtsp-rtp-entity</module>
+        <module>rtsp-rtp-common</module>
+        <module>rtsp-rtp-component</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <properties>
         <java.version>1.8</java.version>
@@ -15,11 +21,23 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.6.Final</version>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>study</groupId>
+                <artifactId>rtsp-rtp-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>study</groupId>
+                <artifactId>rtsp-rtp-entity</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>study</groupId>
+                <artifactId>rtsp-rtp-component</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
