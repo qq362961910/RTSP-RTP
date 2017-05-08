@@ -1,6 +1,7 @@
 package com.jy.rtsp.component.handler;
 
 import com.jy.rtsp.component.controller.VideoController;
+import com.jy.rtsp.component.decoder.NettyTcpRtspDecoder;
 import com.jy.rtsp.cpmmon.enums.VideoState;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -79,7 +80,8 @@ public class RtspVideoHandler extends SimpleChannelInboundHandler<FullHttpMessag
                     System.out.println("---------------------------------------- SETUP -----------------------------------------");
                     for (Map.Entry<String, String> entry: message.headers().entries()) {
                         if (SESSION_KEY.equals(entry.getKey())) {
-                            sessionId = entry.getValue();
+                            String entryValue = entry.getValue();
+                            sessionId = entryValue.split(";")[0];
                         }
                     }
                     readSuccessFullHttpMessage(message);
@@ -90,8 +92,9 @@ public class RtspVideoHandler extends SimpleChannelInboundHandler<FullHttpMessag
                 case PLAY: {
                     System.out.println("---------------------------------------- PLAY -----------------------------------------");
                     readSuccessFullHttpMessage(message);
-                    doPause();
-                    currentState = VideoState.PAUSE;
+//                    doPause();
+//                    currentState = VideoState.PAUSE;
+                    ctx.pipeline().addFirst(new NettyTcpRtspDecoder());
                     break;
                 }
                 case PAUSE: {
@@ -162,7 +165,6 @@ public class RtspVideoHandler extends SimpleChannelInboundHandler<FullHttpMessag
         HttpHeaders headers = msg.headers();
         headers.add("CSeq", seqNo++);
         headers.add("Session", sessionId);
-        headers.add("Transport", "RTP/AVP;UNICAST;client_port=16264-16265;mode=play");
         channel.writeAndFlush(msg);
     }
 
