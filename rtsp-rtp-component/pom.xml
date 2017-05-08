@@ -18,6 +18,10 @@
             <artifactId>rtsp-rtp-entity</artifactId>
         </dependency>
         <dependency>
+            <groupId>study</groupId>
+            <artifactId>rtsp-rtp-common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.9.Final</version>
