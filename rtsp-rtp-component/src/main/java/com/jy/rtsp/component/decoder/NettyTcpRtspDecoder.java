@@ -22,7 +22,7 @@ public class NettyTcpRtspDecoder extends ByteToMessageDecoder{
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         if (in.isReadable()) {
             switch (state) {
-                // magic number, 纠正读取位置, 并且跳过'$'
+                // magic number, 1 byte, 纠正读取位置, 并且跳过'$'
                 case $: {
                     rectifyBytebuf(in);
                     state = State.CHANNEL_NUMBER;
@@ -30,7 +30,7 @@ public class NettyTcpRtspDecoder extends ByteToMessageDecoder{
                         break;
                     }
                 }
-                // channel number, 通信信道
+                // channel number, 1 byte, 通信信道
                 case CHANNEL_NUMBER: {
                     byte channelNumber = in.readByte();
                     // 奇数信道作为控制信道
@@ -49,7 +49,7 @@ public class NettyTcpRtspDecoder extends ByteToMessageDecoder{
                         break;
                     }
                 }
-                // embedded data length, 数据长度
+                // embedded data length, 2 byte, 数据长度
                 case DATA_LENGTH: {
                     length = in.readShort();
                     state = State.DATA;

@@ -43,6 +43,15 @@ public class IndexableBytes {
         index = endIndex;
         return v;
     }
+    public byte[] remain() {
+        int startIndex = index;
+        if (startIndex > max) {
+            throw new IndexOutOfBoundsException("target index: " + startIndex);
+        }
+        index = max;
+        return Arrays.copyOfRange(content, startIndex, max);
+    }
+
 
     public IndexableBytes(byte[] content) {
         this.content = content;

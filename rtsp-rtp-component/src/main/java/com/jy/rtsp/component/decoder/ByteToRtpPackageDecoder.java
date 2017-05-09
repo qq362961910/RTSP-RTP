@@ -36,6 +36,7 @@ public class ByteToRtpPackageDecoder extends MessageToMessageDecoder<byte[]>{
             // read header
             NalHeader nalHeader = readNalHeader(indexableBytes);
             rtpPackage.setNalHeader(nalHeader);
+            rtpPackage.setContent(indexableBytes.remain());
         }
         //聚合
         else if (NalType.MTAP16 == nalType || NalType.MTAP24 == nalType) {
@@ -43,7 +44,7 @@ public class ByteToRtpPackageDecoder extends MessageToMessageDecoder<byte[]>{
         }
         //单 nal 单元包
         else {
-
+            rtpPackage.setContent(indexableBytes.remain());
         }
         out.add(rtpPackage);
     }
@@ -83,11 +84,12 @@ public class ByteToRtpPackageDecoder extends MessageToMessageDecoder<byte[]>{
 
     /**
      * 读取NAL indicator
+     *
      * */
     private NalIndicator readNalIndicator(IndexableBytes indexableBytes) {
         NalIndicator indicator = new NalIndicator();
         byte byte_1 = indexableBytes.readByte();
-        // f: bit 1, nri: 2 bit, type: 5 bit
+        // f: bit 1(必须为0), nri: 2 bit(一般情况下不太关心这个属性), type: 5 bit
         indicator.setF((byte)((byte_1&0xff) >> 7));
         indicator.setNri((byte)(((byte_1&0xff) >> 5) & byte_00000011));
         indicator.setType((byte)((byte_1&0xff) & byte_00011111));
