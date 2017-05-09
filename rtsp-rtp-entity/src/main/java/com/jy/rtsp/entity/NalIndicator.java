@@ -51,7 +51,7 @@ public class NalIndicator {
      * 28    FU-A     分片的单元
      * 29    FU-B     分片的单元
      * */
-    private NalType type;
+    private byte type;
 
     public byte getF() {
         return f;
@@ -69,11 +69,11 @@ public class NalIndicator {
         this.nri = nri;
     }
 
-    public NalType getType() {
+    public byte getType() {
         return type;
     }
 
-    public void setType(NalType type) {
+    public void setType(byte type) {
         this.type = type;
     }
 }

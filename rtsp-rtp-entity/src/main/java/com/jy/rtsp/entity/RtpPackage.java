@@ -29,6 +29,11 @@ public class RtpPackage {
      * */
     private NalHeader nalHeader;
 
+    /**
+     * payload
+     * */
+    private byte[] content;
+
     public RtpHeader getRtpHeader() {
         return rtpHeader;
     }
@@ -51,5 +56,13 @@ public class RtpPackage {
 
     public void setNalHeader(NalHeader nalHeader) {
         this.nalHeader = nalHeader;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 }

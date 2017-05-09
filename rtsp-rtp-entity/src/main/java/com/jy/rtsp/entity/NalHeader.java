@@ -37,52 +37,53 @@ public class NalHeader {
     /**
      * S: 1 bit 当设置成1,开始位指示分片NAL单元的开始。当跟随的FU荷载不是分片NAL单元荷载的开始，开始位设为0。
      * */
-    private boolean start;
+    private byte start;
 
     /**
      * E: 1 bit 当设置成1, 结束位指示分片NAL单元的结束，即, 荷载的最后字节也是分片NAL单元的最后一个字节。当跟随的 FU荷载不是分片NAL单元的最后分片,结束位设置为0。
      * */
-    private boolean end;
+    private byte end;
 
     /**
      * R: 1 bit 保留位必须设置为0，接收者必须忽略该位
      * */
-    private boolean r;
+    private byte r;
 
     /**
      * type
      * */
-    private NalType type;
+    private byte type;
 
-    public boolean isStart() {
+
+    public byte getStart() {
         return start;
     }
 
-    public void setStart(boolean start) {
+    public void setStart(byte start) {
         this.start = start;
     }
 
-    public boolean isEnd() {
+    public byte getEnd() {
         return end;
     }
 
-    public void setEnd(boolean end) {
+    public void setEnd(byte end) {
         this.end = end;
     }
 
-    public boolean isR() {
+    public byte getR() {
         return r;
     }
 
-    public void setR(boolean r) {
+    public void setR(byte r) {
         this.r = r;
     }
 
-    public NalType getType() {
+    public byte getType() {
         return type;
     }
 
-    public void setType(NalType type) {
+    public void setType(byte type) {
         this.type = type;
     }
 }

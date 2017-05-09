@@ -1,6 +1,6 @@
-import com.jy.rtsp.component.decoder.NettyTcpRtspDecoder;
+import com.jy.rtsp.component.decoder.ByteToRtpPackageDecoder;
 import com.jy.rtsp.component.handler.RtspVideoHandler;
-import com.jy.rtsp.component.handler.StreamMessageHandler;
+import com.jy.rtsp.component.handler.RtpPackageHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -9,9 +9,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.rtsp.RtspDecoder;
 import io.netty.handler.codec.rtsp.RtspEncoder;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.internal.logging.InternalLogLevel;
 
 public class RtspClient {
 
@@ -33,9 +30,10 @@ public class RtspClient {
                             ChannelPipeline pipeline = ch.pipeline();
                             ch.pipeline().addLast(new RtspDecoder());
                             ch.pipeline().addLast(new RtspEncoder());
+                            ch.pipeline().addLast(new ByteToRtpPackageDecoder());
                             ch.pipeline().addLast(new HttpObjectAggregator(4096));
                             pipeline.addLast(new RtspVideoHandler(rtspBaseUrl));
-                            pipeline.addLast(new StreamMessageHandler());
+                            pipeline.addLast(new RtpPackageHandler());
                         }});
             ChannelFuture f = bootstrap.connect(host,port).sync();
             //wait until the connection is closed;

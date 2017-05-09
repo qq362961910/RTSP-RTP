@@ -18,13 +18,13 @@ public class RtpHeader {
      * P：填充标志，占1位，如果P=1，则在该报文的尾部填充一个或多个额外的八位组，它们不是有效载荷的一部分。
      * 1 bit
      * */
-    private boolean padding;
+    private byte padding;
 
     /**
      * X：扩展标志，占1位，如果X=1，则在RTP报头后跟有一个扩展报头,需要特殊处理
      * 1 bit
      * */
-    private boolean extension;
+    private byte extension;
 
     /**
      * CC：CSRC计数器，占4位，指示CSRC 标识符的个数
@@ -36,13 +36,13 @@ public class RtpHeader {
      * M: 标记，占1位，不同的有效载荷有不同的含义，对于视频，标记一帧的结束；对于音频，标记会话的开始。
      * 1 bit
      * */
-    private boolean mark;
+    private byte mark;
 
     /**
      * PT: 有效荷载类型，占7位，用于说明RTP报文中有效载荷的类型，如GSM音频、JPEM图像等,在流媒体中大部分是用来区分音频流和视频流的，这样便于客户端进行解析。
      * 7 bit
      * */
-    private PayloadType payloadType;
+    private byte payloadType;
 
     /**
      * 序列号：占16位，用于标识发送者所发送的RTP报文的序列号，每发送一个报文，序列号增1。
@@ -78,19 +78,19 @@ public class RtpHeader {
         this.version = version;
     }
 
-    public boolean isPadding() {
+    public byte getPadding() {
         return padding;
     }
 
-    public void setPadding(boolean padding) {
+    public void setPadding(byte padding) {
         this.padding = padding;
     }
 
-    public boolean isExtension() {
+    public byte getExtension() {
         return extension;
     }
 
-    public void setExtension(boolean extension) {
+    public void setExtension(byte extension) {
         this.extension = extension;
     }
 
@@ -102,23 +102,19 @@ public class RtpHeader {
         this.csrcCount = csrcCount;
     }
 
-    public boolean isMark() {
+    public byte getMark() {
         return mark;
     }
 
-    public boolean getMark() {
-        return mark;
-    }
-
-    public void setMark(boolean mark) {
+    public void setMark(byte mark) {
         this.mark = mark;
     }
 
-    public PayloadType getPayloadType() {
+    public byte getPayloadType() {
         return payloadType;
     }
 
-    public void setPayloadType(PayloadType payloadType) {
+    public void setPayloadType(byte payloadType) {
         this.payloadType = payloadType;
     }
 
