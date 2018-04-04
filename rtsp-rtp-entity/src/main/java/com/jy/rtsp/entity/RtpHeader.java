@@ -1,7 +1,5 @@
 package com.jy.rtsp.entity;
 
-import com.jy.rtsp.cpmmon.enums.PayloadType;
-
 /**
  * RTP数据包
  * 注：基本的RTP说明并不定义任何头扩展本身，如果遇到X=1，需要特殊处理

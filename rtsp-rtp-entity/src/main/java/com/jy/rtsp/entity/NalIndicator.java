@@ -1,7 +1,5 @@
 package com.jy.rtsp.entity;
 
-import com.jy.rtsp.cpmmon.enums.NalType;
-
 /**
  * NALU 头由一个字节组成, 它的语法如下:
  * +---------------+

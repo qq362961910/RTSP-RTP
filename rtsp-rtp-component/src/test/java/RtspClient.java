@@ -12,10 +12,10 @@ import io.netty.handler.codec.rtsp.RtspEncoder;
 
 public class RtspClient {
 
-    private static final String host = "184.72.239.149";
+    private static final String host = "192.168.115.108";
     private static final int port = 554;
 //    private static String rtspBaseUrl = "rtsp://192.168.4.209:554/sample_h264_100kbit.mp4";
-    private static String rtspBaseUrl = "rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov";
+    private static String rtspBaseUrl = "rtsp://"+ host +":554/sample_h264_1mbit.mp4";
 
     public static void main(String[] args) {
         EventLoopGroup workerGroup = new NioEventLoopGroup();

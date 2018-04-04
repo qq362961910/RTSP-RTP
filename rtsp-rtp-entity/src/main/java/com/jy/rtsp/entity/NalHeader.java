@@ -1,7 +1,5 @@
 package com.jy.rtsp.entity;
 
-import com.jy.rtsp.cpmmon.enums.NalType;
-
 /**
  *
  * 单个NAL单元包:
