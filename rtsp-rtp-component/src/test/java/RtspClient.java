@@ -28,10 +28,10 @@ public class RtspClient {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-                            ch.pipeline().addLast(new RtspDecoder());
-                            ch.pipeline().addLast(new RtspEncoder());
-                            ch.pipeline().addLast(new ByteToRtpPackageDecoder());
-                            ch.pipeline().addLast(new HttpObjectAggregator(4096));
+                            pipeline.addLast(new RtspDecoder());
+                            pipeline.addLast(new RtspEncoder());
+                            pipeline.addLast(new ByteToRtpPackageDecoder());
+                            pipeline.addLast(new HttpObjectAggregator(4096));
                             pipeline.addLast(new RtspVideoHandler(rtspBaseUrl));
                             pipeline.addLast(new RtpPackageHandler());
                         }});
@@ -39,7 +39,7 @@ public class RtspClient {
             //wait until the connection is closed;
             f.channel().closeFuture().sync();
         } catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }finally {
             workerGroup.shutdownGracefully();
         }

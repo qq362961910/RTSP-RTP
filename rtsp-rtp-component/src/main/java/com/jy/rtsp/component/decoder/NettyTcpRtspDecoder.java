@@ -90,11 +90,6 @@ public class NettyTcpRtspDecoder extends ByteToMessageDecoder{
     private void rectifyBytebuf(ByteBuf in) {
         int readerIndex = in.readerIndex();
         try {
-            in.getByte(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             while (in.readByte() != magic) {
                 System.out.println("check byte not '$'");
             }
