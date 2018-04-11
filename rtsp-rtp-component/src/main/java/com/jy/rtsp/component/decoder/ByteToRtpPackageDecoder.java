@@ -19,28 +19,45 @@ public class ByteToRtpPackageDecoder extends MessageToMessageDecoder<byte[]>{
     private boolean started = false;
     private byte[] fuCached = null;
 
+    /**
+     * RTP协议体
+     * */
     @Override
     protected void decode(ChannelHandlerContext ctx, byte[] msg, List<Object> out) throws Exception {
-        RtpPackage rtpPackage = new RtpPackage();
         IndexableBytes indexableBytes = new IndexableBytes(msg);
         // read rtp header
         RtpHeader rtpHeader = readRtpHeader(indexableBytes);
-        rtpPackage.setRtpHeader(rtpHeader);
         // read extension
         if (rtpHeader.getExtension() == 1) {
             readExtension(indexableBytes);
         }
+        //payload
+        RtpPackage rtpPackage = dealPayload(rtpHeader, indexableBytes.remain());
+        if(rtpPackage != null) {
+            out.add(rtpPackage);
+        }
+    }
+
+
+    private RtpPackage dealPayload(RtpHeader rtpHeader, byte[] payload) {
+//        System.out.println(HexBin.encode(payload));
+        System.out.println(Arrays.toString(payload));
+        IndexableBytes indexableBytes = new IndexableBytes(payload);
         // read nal indicator
         NalIndicator nalIndicator = readNalIndicator(indexableBytes);
-        rtpPackage.setNalIndicator(nalIndicator);
+
         if(nalIndicator.getType() > 0) {
             //单包
             if(nalIndicator.getType() < 24) {
-                rtpPackage.setContent(ArrayUtil.combine(startCode, indexableBytes.remain()));
-                out.add(rtpPackage);
                 System.out.println("单包");
+                RtpPackage rtpPackage = new RtpPackage();
+                rtpPackage.setNalIndicator(nalIndicator);
+                rtpPackage.setRtpHeader(rtpHeader);
+                rtpPackage.setContent(ArrayUtil.combine(startCode, indexableBytes.remain()));
+                return rtpPackage;
             }//分片
             if (NalType.FU_A.getValue() == nalIndicator.getType() || NalType.FU_B.getValue() == nalIndicator.getType()) {
+                System.out.println("分片包");
                 byte indicator = indexableBytes.readByte();
                 byte payloadHeader = indexableBytes.readByte();
                 byte naluType = (byte)(indicator & 0xe0 | payloadHeader & 0x1F);
@@ -50,20 +67,23 @@ public class ByteToRtpPackageDecoder extends MessageToMessageDecoder<byte[]>{
                     fuCached[startCode.length] = naluType;
                     fuCached = ArrayUtil.combine(fuCached, indexableBytes.remain());
                 } else if((payloadHeader & 0x40) == 0x40) {
+                    RtpPackage rtpPackage = new RtpPackage();
+                    rtpPackage.setNalIndicator(nalIndicator);
+                    rtpPackage.setRtpHeader(rtpHeader);
                     //收到完整帧
                     rtpPackage.setContent(ArrayUtil.combine(fuCached, indexableBytes.remain()));
                     fuCached = null;
-                    out.add(rtpPackage);
+                    return rtpPackage;
                 } else {
                     fuCached = ArrayUtil.combine(fuCached, indexableBytes.remain());
                 }
-                System.out.println("分片包");
             }
             //聚合
             else if (NalType.MTAP16.getValue() == nalIndicator.getType() || NalType.MTAP24.getValue() == nalIndicator.getType()) {
                 System.out.println("组合包");
             }
         }
+        return null;
     }
 
     /**

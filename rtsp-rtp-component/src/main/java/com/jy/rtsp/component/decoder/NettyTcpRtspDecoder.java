@@ -18,6 +18,12 @@ public class NettyTcpRtspDecoder extends ByteToMessageDecoder{
 
     private int count = 0;
 
+    /**
+     * rtsp协议
+     * Magic: $
+     * channel: 0|1
+     * length: xx(2 bytes)
+     * */
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         if (in.isReadable()) {
