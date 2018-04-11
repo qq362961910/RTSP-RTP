@@ -26,6 +26,11 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.9.Final</version>
         </dependency>
+        <dependency>
+            <groupId>com.jy</groupId>
+            <artifactId>common-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 

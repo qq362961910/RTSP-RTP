@@ -25,6 +25,18 @@ public class IndexableBytes {
         }
         return content[targetIndex];
     }
+    public byte getNextByte() {
+        if (index > max) {
+            throw new IndexOutOfBoundsException("target index: " + index);
+        }
+        return content[index];
+    }
+    public byte getByte(int index) {
+        if (index > max) {
+            throw new IndexOutOfBoundsException("target index: " + index);
+        }
+        return content[index];
+    }
     public short readShort() {
         int endIndex = index + 2;
         if (endIndex > max) {
